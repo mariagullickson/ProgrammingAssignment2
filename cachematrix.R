@@ -1,8 +1,10 @@
-## Put comments here that give an overall description of what your
-## functions do
+## This file contains methods for a special matrix implementation that
+## caches the inverted matrix, so it doesn't have to be recomputed even
+## if it's called for frequently.
 
-## Write a short comment describing this function
-
+## create a special "matrix", which is really a list containing
+## functions to set & get the matrix and to set & get it's inverse.
+## this assumes the matrix is invertible.
 makeCacheMatrix <- function(x = matrix()) {
     i <- NULL
     set <- function(y) {
@@ -16,18 +18,20 @@ makeCacheMatrix <- function(x = matrix()) {
 }
 
 
-## Write a short comment describing this function
-
+## this function gets the invers of the special matrix, using cache if
+## possible, or computing and adding to cache if it's not there
 cacheSolve <- function(x, ...) {
+    # look for the inverse in cache first
     i <- x$getinverse()
     if (!is.null(i)) {
         message("getting cached data")
         return (i)
     }
+
+    # it wasn't in cache.  compute the inverse and stick it in cache for
+    # next time
     data <- x$get()
     i <- solve(data, ...)
     x$setinverse(i)
     i
-    
-        ## Return a matrix that is the inverse of 'x'
 }
